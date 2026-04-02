@@ -24,6 +24,16 @@ $qTotal = mysqli_query($conn,
 "SELECT COUNT(*) AS total FROM history WHERE user_id='$uid'");
 $total = mysqli_fetch_assoc($qTotal)['total'];
 
+/* Avg Accuracy */
+$qAvg = mysqli_query($conn,
+"SELECT AVG(accuracy) AS avg_acc FROM history WHERE user_id='$uid'");
+$avgAcc = round(mysqli_fetch_assoc($qAvg)['avg_acc'] ?? 0, 1);
+
+/* Healthy Crops Count */
+$qHealthy = mysqli_query($conn,
+"SELECT COUNT(*) AS healthy FROM history WHERE user_id='$uid' AND disease LIKE '%Healthy%'");
+$healthyCount = mysqli_fetch_assoc($qHealthy)['healthy'];
+
 /* Latest Scan */
 $qLast = mysqli_query($conn,
 "SELECT * FROM history 
@@ -63,13 +73,13 @@ include 'sidebar.php';
     </div>
 
     <div class="stat-box">
-        <h3>Last Disease</h3>
-        <p><?php echo $last ? $last['disease'] : "No Data"; ?></p>
+        <h3>Avg Accuracy</h3>
+        <p><?php echo $avgAcc; ?>%</p>
     </div>
 
     <div class="stat-box">
-        <h3>Last Accuracy</h3>
-        <p><?php echo $last ? $last['accuracy']."%" : "No Data"; ?></p>
+        <h3>Healthy Crops</h3>
+        <p><?php echo $healthyCount; ?></p>
     </div>
 
 </div>
